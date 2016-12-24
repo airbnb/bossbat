@@ -14,7 +14,11 @@ export default class Bossman {
     this.ttl = ttl;
 
     this.client = new Redis(connection);
-    this.subscriber = new Redis(connection);
+    this.subscriber = new Redis({
+      ...connection,
+      // Force our db to be 0 for the subscriber:
+      db: 0,
+    });
     this.redlock = new Redlock([this.client], { retryCount: 0 });
 
     this.jobs = {};
