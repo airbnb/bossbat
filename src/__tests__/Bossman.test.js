@@ -33,7 +33,9 @@ describe('Bossman Integration', () => {
   let boss;
 
   beforeEach(() => {
-    boss = new Bossman();
+    boss = new Bossman({
+      db: 3,
+    });
   });
 
   afterEach(() => (

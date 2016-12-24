@@ -34,5 +34,12 @@
     "ioredis": "^2.4.3",
     "redlock": "^2.1.0",
     "throwback": "^1.1.1"
+  },
+  "jest": {
+    "mocksPattern": "src\/(?:[\\/]|^)__mocks__[\\/]",
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "<rootDir>/lib/"
+    ]
   }
 }

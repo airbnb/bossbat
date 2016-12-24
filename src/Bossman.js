@@ -9,25 +9,22 @@ const JOB_PREFIX = 'bossman:job';
 
 export default class Bossman {
   constructor({ connection, prefix = JOB_PREFIX, ttl = JOB_TTL } = {}) {
-    this.dbNumber = (this.connection && this.connection.db) || 0;
+    const DB_NUMBER = (connection && connection.db) || 0;
+
     this.prefix = prefix;
     this.ttl = ttl;
 
     this.client = new Redis(connection);
-    this.subscriber = new Redis({
-      ...connection,
-      // Force our db to be 0 for the subscriber:
-      db: 0,
-    });
+    this.subscriber = new Redis(connection);
     this.redlock = new Redlock([this.client], { retryCount: 0 });
 
     this.jobs = {};
     this.qas = [];
 
-    // this.subscriber.config('SET', 'notify-keyspace-events', 'Ex');
+    this.subscriber.config('SET', 'notify-keyspace-events', 'Ex');
 
     // Subscribe to expiring keys on the jobs DB:
-    this.subscriber.subscribe(`__keyevent@${this.dbNumber}__:expired`);
+    this.subscriber.subscribe(`__keyevent@${DB_NUMBER}__:expired`);
     this.subscriber.on('message', (channel, message) => {
       // Check to make sure that the message is a job run request:
       if (!message.startsWith(`${this.prefix}:work:`)) return;
