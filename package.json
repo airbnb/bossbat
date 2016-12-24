@@ -1,9 +1,10 @@
 {
   "name": "bossman",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Distributed job scheduling in node, based on redis.",
   "main": "lib/index.js",
   "scripts": {
+    "prepublish": "npm run build",
     "build": "babel src --out-dir lib --copy-files",
     "test": "npm run lint && npm run tests-only",
     "lint": "eslint .",
