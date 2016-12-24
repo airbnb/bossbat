@@ -9,8 +9,7 @@ const JOB_PREFIX = 'bossman:job';
 
 export default class Bossman {
   constructor({ connection, prefix = JOB_PREFIX, ttl = JOB_TTL } = {}) {
-    const DB_NUMBER = (this.connection && this.connection.db) || 0;
-
+    this.dbNumber = (this.connection && this.connection.db) || 0;
     this.prefix = prefix;
     this.ttl = ttl;
 
@@ -21,26 +20,32 @@ export default class Bossman {
     this.jobs = {};
     this.qas = [];
 
-    this.subscriber.config('SET', 'notify-keyspace-events', 'Ex');
+    // this.subscriber.config('SET', 'notify-keyspace-events', 'Ex');
 
     // Subscribe to expiring keys on the jobs DB:
-    this.subscriber.subscribe(`__keyevent@${DB_NUMBER}__:expired`);
+    this.subscriber.subscribe(`__keyevent@${this.dbNumber}__:expired`);
     this.subscriber.on('message', (channel, message) => {
       // Check to make sure that the message is a job run request:
       if (!message.startsWith(`${this.prefix}:work:`)) return;
 
       const jobName = message.split(':').pop();
 
-      // Attempt to perform the job. Only one worker will end up getting assigned the job thanks to
-      // distributed locking via redlock.
-      this.doWork(jobName);
-
-      // Schedule the next run now that we have the lock. We do this in every instance because it's
-      // just a simple set command, and is okay to run on top of eachother.
       if (this.jobs[jobName]) {
+        // Attempt to perform the job. Only one worker will end up getting assigned
+        // the job thanks to distributed locking via redlock.
+        this.doWork(jobName);
+        // Schedule the next run. We do this in every instance because it's
+        // just a simple set command, and is okay to run on top of eachother.
         this.scheduleRun(jobName, this.jobs[jobName].every);
       }
     });
+  }
+
+  quit() {
+    return Promise.all([
+      this.subscriber.quit(),
+      this.client.quit(),
+    ]);
   }
 
   getJobKey(name) {
@@ -59,8 +64,8 @@ export default class Bossman {
   doWork(name) {
     this.redlock.lock(this.getLockKey(name), this.ttl).then((lock) => {
       const fn = compose(this.qas);
-      const response = fn(name, this.jobs[name], (jobName, definition) => (
-        definition.work()
+      const response = fn(name, this.jobs[name], () => (
+        this.jobs[name].work()
       ));
 
       const end = () => { lock.unlock(); };

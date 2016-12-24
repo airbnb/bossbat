@@ -5,8 +5,9 @@
   "main": "lib/index.js",
   "scripts": {
     "build": "babel src --out-dir lib --copy-files",
+    "test": "npm run lint && npm run tests-only",
     "lint": "eslint .",
-    "tests-only": "babel-node test/Bossman.test.js"
+    "tests-only": "jest"
   },
   "repository": {
     "type": "git",
@@ -20,10 +21,12 @@
   "homepage": "https://github.com/kesne/bossman#readme",
   "devDependencies": {
     "babel-cli": "^6.18.0",
+    "babel-jest": "^18.0.0",
     "babel-preset-airbnb": "^2.1.1",
     "eslint": "^3.12.2",
     "eslint-config-airbnb-base": "^11.0.0",
-    "eslint-plugin-import": "^2.2.0"
+    "eslint-plugin-import": "^2.2.0",
+    "jest": "^18.0.0"
   },
   "dependencies": {
     "human-interval": "^0.1.6",
