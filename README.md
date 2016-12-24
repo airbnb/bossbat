@@ -4,34 +4,41 @@ Distributed job scheduling in node, based on redis.
 
 ## Usage
 
-```
+```shell
 npm install bossman --save
 ```
-
-You `list` new jobs, your workers `apply` to perform jobs, and if they get selected to perform them, they get `hired`, and perform `work`.
-Because naming is hard and funny always wins.
 
 ```js
 import Bossman from 'bossman';
 
-const boss = new Bossman(redisClient);
-// Apply to perform a given job.
-boss.apply('logout', {
-  work: () => {
-    // do something...
-  }
+// Make sure you name your variables clever things:
+const fred = new Bossman({
+  connection: {
+    host: '127.0.0.1',
+    port: 1234,
+  },
+  // Set the redis key prefix:
+  prefix: 'bossman:',
 });
 
-// Perform something once:
-boss.list('logout');
-
-// Schedule the listing in the future:
-boss.list('logout', {
-  in: '10 minutes',
-});
-
-// Schedule the listing recurring:
-boss.list('logout', {
+// Hire for a job.
+fred.hire('engineer', {
   every: '10 minutes',
+  work: () => {
+    // Do something...
+  },
+});
+
+// You can also "qa" work:
+fred.qa((jobName, jobDefinition, next) => {
+  return newrelic.createBackgroundTransaction(`job:${jobName}`, () => {
+    const response = next();
+
+    const end = () => {
+      newrelic.endTransaction();
+    };
+
+    return response.then(end, end);
+  })();
 });
 ```

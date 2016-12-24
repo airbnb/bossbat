@@ -1,0 +1,34 @@
+{
+  "name": "bossman",
+  "version": "0.0.0",
+  "description": "Distributed job scheduling in node, based on redis.",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "babel src --out-dir lib --copy-files",
+    "lint": "eslint .",
+    "tests-only": "babel-node test/Bossman.test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kesne/bossman.git"
+  },
+  "author": "Jordan Gensler <jordangens@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kesne/bossman/issues"
+  },
+  "homepage": "https://github.com/kesne/bossman#readme",
+  "devDependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-preset-airbnb": "^2.1.1",
+    "eslint": "^3.12.2",
+    "eslint-config-airbnb-base": "^11.0.0",
+    "eslint-plugin-import": "^2.2.0"
+  },
+  "dependencies": {
+    "human-interval": "^0.1.6",
+    "ioredis": "^2.4.3",
+    "redlock": "^2.1.0",
+    "throwback": "^1.1.1"
+  }
+}
