@@ -6,4 +6,7 @@ node_js:
   - "5.11"
   - "4"
 
+services:
+  - redis-server
+
 after_script: "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
