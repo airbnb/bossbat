@@ -7,6 +7,7 @@ describe('Bossman Units', () => {
   it('constructs with no arguments', () => {
     const boss = new Bossman();
     expect(boss).toBeInstanceOf(Bossman);
+    boss.quit();
   });
 
   it('constructs with arguments', () => {
@@ -14,6 +15,7 @@ describe('Bossman Units', () => {
     expect(boss).toBeInstanceOf(Bossman);
     expect(boss.ttl).toEqual(101);
     expect(boss.prefix).toEqual('p');
+    boss.quit();
   });
 
   it('pushes to the qas array when calling qa', () => {
@@ -23,6 +25,7 @@ describe('Bossman Units', () => {
     boss.qa(fn1);
     boss.qa(fn2);
     expect(boss.qas).toEqual([fn1, fn2]);
+    boss.quit();
   });
 });
 
@@ -88,4 +91,19 @@ describe('Bossman Integration', () => {
       });
     });
   });
+
+  it('removes tasks with fire', (done) => {
+    boss.hire('fired', {
+      every: '0.5 seconds',
+      work: () => {
+        done(new Error('Work should not be called'));
+      },
+    });
+
+    boss.fire('fired');
+
+    setTimeout(done, 1000);
+  });
+
+  it('does not require every to be passed');
 });
