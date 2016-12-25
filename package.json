@@ -8,8 +8,7 @@
     "build": "babel src --out-dir lib --copy-files",
     "test": "npm run lint && npm run tests-only",
     "lint": "eslint .",
-    "tests-only": "jest",
-    "coverage": "jest --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
+    "tests-only": "jest --coverage"
   },
   "repository": {
     "type": "git",
