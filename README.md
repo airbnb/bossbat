@@ -1,6 +1,9 @@
 # bossman
+_Distributed job scheduling in node, backed by redis._
 
-Distributed job scheduling in node, backed by redis.
+[![npm Version](https://img.shields.io/npm/v/bossman.svg)](https://www.npmjs.com/package/bossman)
+[![License](https://img.shields.io/npm/l/bossman.svg)](https://www.npmjs.com/package/bossman)
+[![Build Status](https://travis-ci.org/airbnb/enzyme.svg)](https://travis-ci.org/airbnb/enzyme)
 
 Bossman combines schedulers and workers into a single concept, which aligns better with most node applications.
 All of the jobs run with a [redis lock](https://redis.io/topics/distlock), preventing more than once instance from performing a given job at a time.

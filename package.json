@@ -8,14 +8,15 @@
     "build": "babel src --out-dir lib --copy-files",
     "test": "npm run lint && npm run tests-only",
     "lint": "eslint .",
-    "tests-only": "jest"
+    "tests-only": "jest",
+    "coverage": "jest --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kesne/bossman.git"
   },
   "author": "Jordan Gensler <jordangens@gmail.com>",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/kesne/bossman/issues"
   },
@@ -24,6 +25,7 @@
     "babel-cli": "^6.18.0",
     "babel-jest": "^18.0.0",
     "babel-preset-airbnb": "^2.1.1",
+    "coveralls": "^2.11.15",
     "eslint": "^3.12.2",
     "eslint-config-airbnb-base": "^11.0.0",
     "eslint-plugin-import": "^2.2.0",
