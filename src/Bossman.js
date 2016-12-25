@@ -37,17 +37,38 @@ export default class Bossman {
         this.doWork(jobName);
         // Schedule the next run. We do this in every instance because it's
         // just a simple set command, and is okay to run on top of eachother.
-        this.scheduleRun(jobName, this.jobs[jobName].every);
+        if (this.jobs[jobName].every) {
+          this.scheduleRun(jobName, this.jobs[jobName].every);
+        }
       }
     });
   }
 
   quit() {
+    this.jobs = {};
     return Promise.all([
       this.subscriber.quit(),
       this.client.quit(),
     ]);
   }
+
+
+  hire(name, definition) {
+    this.jobs[name] = definition;
+    if (definition.every) {
+      this.scheduleRun(name, definition.every);
+    }
+  }
+
+  fire(name) {
+    return this.client.del(this.getJobKey(name));
+  }
+
+  qa(fn) {
+    this.qas.push(fn);
+  }
+
+  // Semi-privates:
 
   getJobKey(name) {
     return `${this.prefix}:work:${name}`;
@@ -57,16 +78,15 @@ export default class Bossman {
     return `${this.prefix}:lock:${name}`;
   }
 
-  hire(name, definition) {
-    this.jobs[name] = definition;
-    this.scheduleRun(name, definition.every);
-  }
-
+  // TODO: Expose this API directly so that you can just call `.doWork('jobName');` to directly perform a job in your instance, still with
+  // locking mechanics. But we need a better API name
   doWork(name) {
     this.redlock.lock(this.getLockKey(name), this.ttl).then((lock) => {
       const fn = compose(this.qas);
-      const response = fn(name, this.jobs[name], () => (
-        this.jobs[name].work()
+      // Call the QA functions, then finally the job function. We use a copy of
+      // the job definition to prevent pollution between scheduled runs.
+      const response = fn(name, { ...this.jobs[name] }, (_, definition) => (
+        definition.work()
       ));
 
       const end = () => { lock.unlock(); };
@@ -77,10 +97,6 @@ export default class Bossman {
       // We just ignore these cases:
       null
     ));
-  }
-
-  qa(fn) {
-    this.qas.push(fn);
   }
 
   scheduleRun(name, interval) {
