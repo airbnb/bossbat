@@ -78,8 +78,9 @@ export default class Bossman {
     return `${this.prefix}:lock:${name}`;
   }
 
-  // TODO: Expose this API directly so that you can just call `.doWork('jobName');` to directly perform a job in your instance, still with
-  // locking mechanics. But we need a better API name
+  // TODO: Expose this API directly so that you can just call `.doWork('jobName');` to
+  // directly perform a job in your instance, still with locking mechanics.
+  // But we need a better API name.
   doWork(name) {
     this.redlock.lock(this.getLockKey(name), this.ttl).then((lock) => {
       const fn = compose(this.qas);
