@@ -5,7 +5,7 @@ import { compose } from 'throwback';
 
 // We timeout jobs after 2 seconds:
 const JOB_TTL = 2000;
-const JOB_PREFIX = 'bossman:job';
+const JOB_PREFIX = 'bossman';
 
 export default class Bossman {
   constructor({ connection, prefix = JOB_PREFIX, ttl = JOB_TTL } = {}) {
@@ -69,13 +69,17 @@ export default class Bossman {
   }
 
   demand(name) {
-    this.scheduleRun(name, 1);
+    this.scheduleRun(name);
   }
 
   // Semi-privates:
 
   getJobKey(name) {
     return `${this.prefix}:work:${name}`;
+  }
+
+  getDemandKey(name) {
+    return `${this.prefix}:work:demand:${name}`;
   }
 
   getLockKey(name) {
@@ -102,6 +106,10 @@ export default class Bossman {
   }
 
   scheduleRun(name, interval) {
+    // If there's no interval, it's a demand, let's schedule as tight as we can:
+    if (!interval) {
+      return this.client.set(this.getDemandKey(name), name, 'PX', 1, 'NX');
+    }
     const timeout = humanInterval(interval);
     return this.client.set(this.getJobKey(name), name, 'PX', timeout, 'NX');
   }

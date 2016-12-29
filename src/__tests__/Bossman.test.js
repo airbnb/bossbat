@@ -149,4 +149,18 @@ describe('Bossman Integration', () => {
 
     setTimeout(done, 100);
   });
+
+  it('can demand over a scheduled key', (done) => {
+    let performed = 0;
+
+    boss.hire('both', {
+      every: '0.5 seconds',
+      work() {
+        performed += 1;
+        if (performed === 2) done();
+      },
+    });
+
+    boss.demand('both');
+  });
 });
