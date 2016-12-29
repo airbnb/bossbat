@@ -45,6 +45,9 @@ fred.hire('engineers', {
   },
 });
 
+// Hire something as soon as possible:
+fred.demand('engineers');
+
 // You can also "qa" work:
 fred.qa((jobName, jobDefinition, next) => {
   return newrelic.createBackgroundTransaction(`job:${jobName}`, () => {
@@ -64,6 +67,12 @@ fred.fire('engineers');
 // Shut down our instance. This does not stop any already-scheduled work from firing in other instances.
 fred.quit();
 ```
+
+## API
+
+#### `new Bossman`
+
+#### `bossman.hire`
 
 ## How it works
 

@@ -33,17 +33,26 @@ describe('Bossman Integration', () => {
   jest.resetModules();
   jest.unmock('ioredis');
   const Bossman = require('../Bossman').default;
+  const Redis = require('ioredis');
   let boss;
+  let bossAlternative;
 
   beforeEach(() => {
     boss = new Bossman({
-      db: 3,
+      connection: { db: 3 },
+    });
+    bossAlternative = new Bossman({
+      connection: { db: 3 },
     });
   });
 
   afterEach(() => (
     // Put this on a slight delay so that the locks can be released before the test ends:
-    new Promise(resolve => setTimeout(resolve, 0)).then(() => boss.quit())
+    new Promise(resolve => (
+      setTimeout(resolve, 0)
+    )).then(() => (
+      Promise.all([boss.quit(), bossAlternative.quit()])
+    ))
   ));
 
   it('runs scheduled work', (done) => {
@@ -92,6 +101,24 @@ describe('Bossman Integration', () => {
     });
   });
 
+  it('only performs on one worker, even when given multiple workers', (done) => {
+    let performed = 0;
+
+    // Start 50 of these jobs, which still should only be fired once:
+    Array(50).fill().forEach(() => {
+      [boss, bossAlternative].forEach((b) => {
+        b.hire('one', {
+          every: '0.5 seconds',
+          work: () => {
+            performed += 1;
+            expect(performed).toEqual(1);
+            done();
+          },
+        });
+      });
+    });
+  });
+
   it('removes tasks with fire', (done) => {
     boss.hire('fired', {
       every: '0.5 seconds',
@@ -105,5 +132,21 @@ describe('Bossman Integration', () => {
     setTimeout(done, 1000);
   });
 
-  it('does not require every to be passed');
+  it('does not require every to be passed', (done) => {
+    boss.hire('demanded', {
+      work: () => {
+        done('Work performed non-scheduled.');
+      },
+    });
+
+    boss.demand('demanded');
+  });
+
+  it('ignores non-work expiring messages', (done) => {
+    const redis = new Redis({ db: 3 });
+    redis.set('some-other-key', 'val', 'PX', 1);
+    redis.quit();
+
+    setTimeout(done, 100);
+  });
 });
