@@ -1,6 +1,6 @@
 {
   "name": "bossman",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "Distributed job scheduling in node, based on redis.",
   "main": "lib/index.js",
   "scripts": {
