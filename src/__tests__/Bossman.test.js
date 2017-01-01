@@ -135,7 +135,7 @@ describe('Bossman Integration', () => {
   it('does not require every to be passed', (done) => {
     boss.hire('demanded', {
       work: () => {
-        done('Work performed non-scheduled.');
+        done();
       },
     });
 
@@ -162,5 +162,14 @@ describe('Bossman Integration', () => {
     });
 
     boss.demand('both');
+  });
+
+  it('allows colons in names', (done) => {
+    boss.hire('something:with:colons', {
+      every: '0.2 seconds',
+      work() {
+        done();
+      },
+    });
   });
 });

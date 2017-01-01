@@ -29,7 +29,9 @@ export default class Bossman {
       // Check to make sure that the message is a job run request:
       if (!message.startsWith(`${this.prefix}:work:`)) return;
 
-      const jobName = message.split(':').pop();
+      const jobName = message.startsWith(`${this.prefix}:work:demand:`)
+        ? message.replace(`${this.prefix}:work:demand:`, '')
+        : message.replace(`${this.prefix}:work:`, '');
 
       if (this.jobs[jobName]) {
         // Attempt to perform the job. Only one worker will end up getting assigned
