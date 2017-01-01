@@ -57,7 +57,7 @@ describe('Bossman Integration', () => {
 
   it('runs scheduled work', (done) => {
     boss.hire('scheduled', {
-      every: '0.5 seconds',
+      every: '200 ms',
       work: () => {
         done();
       },
@@ -77,7 +77,7 @@ describe('Bossman Integration', () => {
     });
 
     boss.hire('qas', {
-      every: '0.5 seconds',
+      every: '200 ms',
       work: () => {
         expect(flags).toEqual({ performed: false, qa: true });
         flags.performed = true;
@@ -91,7 +91,7 @@ describe('Bossman Integration', () => {
     // Start 50 of these jobs, which still should only be fired once:
     Array(50).fill().forEach(() => {
       boss.hire('one', {
-        every: '0.5 seconds',
+        every: '200 ms',
         work: () => {
           performed += 1;
           expect(performed).toEqual(1);
@@ -108,7 +108,7 @@ describe('Bossman Integration', () => {
     Array(50).fill().forEach(() => {
       [boss, bossAlternative].forEach((b) => {
         b.hire('one', {
-          every: '0.5 seconds',
+          every: '200 ms',
           work: () => {
             performed += 1;
             expect(performed).toEqual(1);
@@ -121,7 +121,7 @@ describe('Bossman Integration', () => {
 
   it('removes tasks with fire', (done) => {
     boss.hire('fired', {
-      every: '0.5 seconds',
+      every: '200 ms',
       work: () => {
         done(new Error('Work should not be called'));
       },
@@ -154,7 +154,7 @@ describe('Bossman Integration', () => {
     let performed = 0;
 
     boss.hire('both', {
-      every: '0.5 seconds',
+      every: '200 ms',
       work() {
         performed += 1;
         if (performed === 2) done();
@@ -166,10 +166,36 @@ describe('Bossman Integration', () => {
 
   it('allows colons in names', (done) => {
     boss.hire('something:with:colons', {
-      every: '0.2 seconds',
+      every: '200 ms',
       work() {
         done();
       },
     });
+  });
+
+  it('allows cron formats', (done) => {
+    boss.hire('cronjob', {
+      cron: '*/1 * * * * *',
+      work() {
+        done();
+      },
+    });
+  });
+
+  it('allows numeric values for every', (done) => {
+    boss.hire('numeric', {
+      every: 200,
+      work() {
+        done();
+      },
+    });
+  });
+
+  it('throws when given an invalid type for every', () => {
+    expect(() => {
+      boss.hire('throws', {
+        every: {},
+      });
+    }).toThrowError();
   });
 });

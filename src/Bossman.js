@@ -1,7 +1,8 @@
 import Redlock from 'redlock';
 import Redis from 'ioredis';
-import humanInterval from 'human-interval';
+import timestring from 'timestring';
 import { compose } from 'throwback';
+import { parseExpression } from 'cron-parser';
 
 // We timeout jobs after 2 seconds:
 const JOB_TTL = 2000;
@@ -39,8 +40,8 @@ export default class Bossman {
         this.doWork(jobName);
         // Schedule the next run. We do this in every instance because it's
         // just a simple set command, and is okay to run on top of eachother.
-        if (this.jobs[jobName].every) {
-          this.scheduleRun(jobName, this.jobs[jobName].every);
+        if (this.jobs[jobName].every || this.jobs[jobName].cron) {
+          this.scheduleRun(jobName, this.jobs[jobName]);
         }
       }
     });
@@ -57,8 +58,8 @@ export default class Bossman {
 
   hire(name, definition) {
     this.jobs[name] = definition;
-    if (definition.every) {
-      this.scheduleRun(name, definition.every);
+    if (definition.every || definition.cron) {
+      this.scheduleRun(name, definition);
     }
   }
 
@@ -107,12 +108,30 @@ export default class Bossman {
     ));
   }
 
-  scheduleRun(name, interval) {
-    // If there's no interval, it's a demand, let's schedule as tight as we can:
-    if (!interval) {
+  scheduleRun(name, definition) {
+    // If there's no definition passed, it's a demand, let's schedule as tight as we can:
+    if (!definition) {
       return this.client.set(this.getDemandKey(name), name, 'PX', 1, 'NX');
     }
-    const timeout = humanInterval(interval);
+
+    let timeout;
+    if (definition.every) {
+      const typeOfEvery = typeof definition.every;
+      if (typeOfEvery === 'string') {
+        // Passed a human interval:
+        timeout = timestring(definition.every, 'ms');
+      } else if (typeOfEvery === 'number') {
+        // Passed a ms interval:
+        timeout = definition.every;
+      } else {
+        throw new Error(`Unknown interval of type "${typeOfEvery}" passed to hire.`);
+      }
+    } else if (definition.cron) {
+      const nextTime = parseExpression(definition.cron, { iterator: false }).next().getTime();
+      const cronTimeout = nextTime - Date.now();
+      // Force timeout to be at least 1:
+      timeout = cronTimeout >= 1 ? cronTimeout : 1;
+    }
     return this.client.set(this.getJobKey(name), name, 'PX', timeout, 'NX');
   }
 }
