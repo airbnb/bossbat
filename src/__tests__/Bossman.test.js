@@ -181,4 +181,21 @@ describe('Bossman Integration', () => {
       },
     });
   });
+
+  it('allows numeric values for every', (done) => {
+    boss.hire('numeric', {
+      every: 200,
+      work() {
+        done();
+      },
+    });
+  });
+
+  it('throws when given an invalid type for every', () => {
+    expect(() => {
+      boss.hire('throws', {
+        every: {},
+      });
+    }).toThrowError();
+  });
 });

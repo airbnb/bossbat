@@ -109,11 +109,13 @@ export default class Bossman {
   }
 
   scheduleRun(name, definition) {
-    let timeout;
+    // If there's no definition passed, it's a demand, let's schedule as tight as we can:
     if (!definition) {
-      // If there's no definition passed, it's a demand, let's schedule as tight as we can:
-      timeout = 1;
-    } else if (definition.every) {
+      return this.client.set(this.getDemandKey(name), name, 'PX', 1, 'NX');
+    }
+
+    let timeout;
+    if (definition.every) {
       const typeOfEvery = typeof definition.every;
       if (typeOfEvery === 'string') {
         // Passed a human interval:
