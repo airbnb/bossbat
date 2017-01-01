@@ -76,13 +76,16 @@ Creates a new bossman instance. All arguments are optional.
 Schedules recurring work to be done.
 
 - `jobName`: A unique name for the job.
-- `jobDefinition`: The job definition can contain two properties: `work`, and `every`. The `work` function is invoked when the job is completed. `every` is a human-friendly string which describes the interval the job will be run.
+- `jobDefinition`: The job definition can contain three properties: `work`, `every`, and `cron`.
+    - `jobDefinition.work`: A function that is invoked to perform the job. If the work is async, this function should return a promise to properly reflect the completion of the job.
+    - `jobDefinition.every`: A string which describes the interval the job will be run. This can either be a human-friendly string (which will be parsed by the [`timestring`](https://www.npmjs.com/package/timestring) module), or a number reflecting the milliseconds to wait between each job run.
+    - `jobDefinition.cron`: A string used to schedule work in more complex intervals. These are parsed with [`cron-parser`](https://www.npmjs.com/package/cron-parser).
 
-It's possible to omit the `every` property if you don't wish to schedule recurring work, and just want to register a job.
+It's possible to omit the `every` or `cron` properties if you don't wish to schedule recurring work, and just want to register a job.
 
 #### `bossman.demand(jobName: String)`
 
-Runs a job as soon as possible, outside of the scheduled jobs.
+Runs a job as soon as possible, outside of the scheduled jobs. Demanded jobs still run with the same locking mechanism that scheduled jobs run with, ensuring only one instance runs the job at a time.
 This does **not** prevent any scheduled jobs from running, unless the demand is running at the same time as a scheduled job and all instances fail to acquire a lock on the job.
 
 #### `bossman.qa(qaFunction: Function)`
