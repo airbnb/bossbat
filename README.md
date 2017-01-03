@@ -32,7 +32,7 @@ import Bossman from 'bossman';
 const fred = new Bossman({
   connection: {
     host: '127.0.0.1',
-    port: 1234,
+    port: 6379,
   },
   // Set the redis key prefix:
   prefix: 'bossman:',
