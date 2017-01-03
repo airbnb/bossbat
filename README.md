@@ -90,9 +90,9 @@ This does **not** prevent any scheduled jobs from running, unless the demand is 
 
 #### `bossman.qa(qaFunction: Function)`
 
-QA is used to registers functions that will invoked any time a job is run. This function can be called multiple times to register multiple QA functions.
+QA is used to register functions that will be invoked any time a job is run. This function can be called multiple times to register multiple QA functions.
 The passed `qaFunction` function will be called with `jobName`, and `jobDefinition` from the `hire` function, as well as a `next` function, which should be called when the QA function is complete.
-The `next` function returns a promise that can be used to get  
+The `next` function returns a promise that can be used to run code after a job is completed.
 
 For example, here is what a time logging QA function might look like.
 
