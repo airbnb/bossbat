@@ -1,20 +1,20 @@
 {
   "name": "bossman",
   "version": "2.0.0",
-  "description": "Distributed job scheduling in node, based on redis.",
+  "description": "Stupid simple distributed job scheduling in node, backed by redis.",
   "main": "lib/index.js",
   "scripts": {
     "prepublish": "npm run build",
     "build": "babel src --out-dir lib --copy-files",
     "test": "npm run lint && npm run tests-only",
     "lint": "eslint .",
-    "tests-only": "jest --coverage"
+    "tests-only": "jest"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kesne/bossman.git"
   },
-  "author": "Jordan Gensler <jordangens@gmail.com>",
+  "author": "Jordan Gensler <jordan.gensler@airbnb.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/kesne/bossman/issues"
@@ -38,6 +38,7 @@
     "timestring": "^3.2.0"
   },
   "jest": {
+    "collectCoverage": true,
     "mocksPattern": "src/(?:[\\/]|^)__mocks__[\\/]",
     "testPathIgnorePatterns": [
       "/node_modules/",
