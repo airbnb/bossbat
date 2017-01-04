@@ -1,25 +1,25 @@
 /* eslint-env jest */
 /* eslint-disable global-require */
 
-describe('Bossman Units', () => {
-  const Bossman = require('../Bossman').default;
+describe('Bossbat Units', () => {
+  const Bossbat = require('../Bossbat').default;
 
   it('constructs with no arguments', () => {
-    const boss = new Bossman();
-    expect(boss).toBeInstanceOf(Bossman);
+    const boss = new Bossbat();
+    expect(boss).toBeInstanceOf(Bossbat);
     boss.quit();
   });
 
   it('constructs with arguments', () => {
-    const boss = new Bossman({ connection: { db: 4 }, ttl: 101, prefix: 'p' });
-    expect(boss).toBeInstanceOf(Bossman);
+    const boss = new Bossbat({ connection: { db: 4 }, ttl: 101, prefix: 'p' });
+    expect(boss).toBeInstanceOf(Bossbat);
     expect(boss.ttl).toEqual(101);
     expect(boss.prefix).toEqual('p');
     boss.quit();
   });
 
   it('pushes to the qas array when calling qa', () => {
-    const boss = new Bossman();
+    const boss = new Bossbat();
     const fn1 = () => {};
     const fn2 = () => {};
     boss.qa(fn1);
@@ -29,19 +29,19 @@ describe('Bossman Units', () => {
   });
 });
 
-describe('Bossman Integration', () => {
+describe('Bossbat Integration', () => {
   jest.resetModules();
   jest.unmock('ioredis');
-  const Bossman = require('../Bossman').default;
+  const Bossbat = require('../Bossbat').default;
   const Redis = require('ioredis');
   let boss;
   let bossAlternative;
 
   beforeEach(() => {
-    boss = new Bossman({
+    boss = new Bossbat({
       connection: { db: 3 },
     });
-    bossAlternative = new Bossman({
+    bossAlternative = new Bossbat({
       connection: { db: 3 },
     });
   });
