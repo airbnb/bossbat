@@ -30,12 +30,17 @@ describe('Bossbat Units', () => {
 });
 
 describe('Bossbat Integration', () => {
-  jest.resetModules();
-  jest.unmock('ioredis');
-  const Bossbat = require('../Bossbat').default;
-  const Redis = require('ioredis');
+  let Bossbat;
+  let Redis;
   let boss;
   let bossAlternative;
+
+  beforeAll(() => {
+    jest.resetModules();
+    jest.unmock('ioredis');
+    Bossbat = require('../Bossbat').default;
+    Redis = require('ioredis');
+  });
 
   beforeEach(() => {
     boss = new Bossbat({
