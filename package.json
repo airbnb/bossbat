@@ -12,14 +12,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kesne/bossbat.git"
+    "url": "git+https://github.com/airbnb/bossbat.git"
   },
   "author": "Jordan Gensler <jordan.gensler@airbnb.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/kesne/bossbat/issues"
+    "url": "https://github.com/airbnb/bossbat/issues"
   },
-  "homepage": "https://github.com/kesne/bossbat#readme",
+  "homepage": "https://github.com/airbnb/bossbat#readme",
   "devDependencies": {
     "babel-cli": "^6.18.0",
     "babel-jest": "^18.0.0",

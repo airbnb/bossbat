@@ -3,8 +3,8 @@ _Stupid simple distributed job scheduling in node, backed by redis._
 
 [![npm Version](https://img.shields.io/npm/v/bossbat.svg)](https://www.npmjs.com/package/bossbat)
 [![License](https://img.shields.io/npm/l/bossbat.svg)](https://www.npmjs.com/package/bossbat)
-[![Build Status](https://travis-ci.org/kesne/bossbat.svg)](https://travis-ci.org/kesne/bossbat)
-[![Coverage Status](https://coveralls.io/repos/github/kesne/bossbat/badge.svg?branch=master)](https://coveralls.io/github/kesne/bossbat?branch=master)
+[![Build Status](https://travis-ci.org/airbnb/bossbat.svg)](https://travis-ci.org/airbnb/bossbat)
+[![Coverage Status](https://coveralls.io/repos/github/airbnb/bossbat/badge.svg?branch=master)](https://coveralls.io/github/airbnb/bossbat?branch=master)
 
 Bossbat combines schedulers and workers into a single concept, which aligns better with most node applications.
 All of the jobs run with a [redis lock](https://redis.io/topics/distlock), preventing more than once instance from performing a given job at a time.
