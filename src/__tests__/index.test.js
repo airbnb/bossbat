@@ -6,6 +6,6 @@ const BossbatCJS = require('../index');
 
 describe('index', () => {
   it('exports for commonJS and ES modules', () => {
-    expect(Bossbat).to.equal(BossbatCJS);
+    expect(Bossbat).toEqual(BossbatCJS);
   });
 });
