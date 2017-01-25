@@ -2,7 +2,7 @@
 /* eslint-disable global-require */
 
 describe('Bossbat Units', () => {
-  const Bossbat = require('../Bossbat').default;
+  const Bossbat = require('../Bossbat');
 
   it('constructs with no arguments', () => {
     const boss = new Bossbat();
@@ -38,7 +38,7 @@ describe('Bossbat Integration', () => {
   beforeAll(() => {
     jest.resetModules();
     jest.unmock('ioredis');
-    Bossbat = require('../Bossbat').default;
+    Bossbat = require('../Bossbat');
     Redis = require('ioredis');
   });
 
