@@ -1,3 +1,3 @@
-import Bossman from './Bossman';
+import Bossbat from './Bossbat';
 
-export default Bossman;
+export default Bossbat;

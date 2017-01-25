@@ -6,9 +6,9 @@ import { parseExpression } from 'cron-parser';
 
 // We timeout jobs after 2 seconds:
 const JOB_TTL = 2000;
-const JOB_PREFIX = 'bossman';
+const JOB_PREFIX = 'bossbat';
 
-export default class Bossman {
+export default class Bossbat {
   constructor({ connection, prefix = JOB_PREFIX, ttl = JOB_TTL } = {}) {
     const DB_NUMBER = (connection && connection.db) || 0;
 
