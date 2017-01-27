@@ -23,7 +23,7 @@ Or if you use Yarn in your project:
 yarn add bossbat
 ```
 
-You can then import the module and use it normally. For more details, see the [API documentation](#API).
+You can then import the module and use it normally. For more details, see the [API documentation](#api).
 
 ```js
 import Bossbat from 'bossbat';
