@@ -129,10 +129,9 @@ export default class Bossbat {
       }
     } else if (definition.cron) {
       const options = { iterator: false, tz: this.tz };
-      const nextTime = parseExpression(definition.cron, options).next().getTime();
-      const cronTimeout = nextTime - Date.now();
-      // Force timeout to be at least 1:
-      timeout = cronTimeout >= 1 ? cronTimeout : 1;
+      const iterator = parseExpression(definition.cron, options);
+      const cronTimeout = iterator.next().getTime() - Date.now();
+      timeout = cronTimeout > 0 ? cronTimeout : iterator.next().getTime() - Date.now();
     }
     return this.client.set(this.getJobKey(name), name, 'PX', timeout, 'NX');
   }
