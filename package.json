@@ -1,6 +1,6 @@
 {
   "name": "bossbat",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Stupid simple distributed job scheduling in node, backed by redis.",
   "main": "lib/index.js",
   "scripts": {
