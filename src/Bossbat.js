@@ -9,11 +9,12 @@ const JOB_TTL = 2000;
 const JOB_PREFIX = 'bossbat';
 
 export default class Bossbat {
-  constructor({ connection, prefix = JOB_PREFIX, ttl = JOB_TTL } = {}) {
+  constructor({ connection, prefix = JOB_PREFIX, ttl = JOB_TTL, tz } = {}) {
     const DB_NUMBER = (connection && connection.db) || 0;
 
     this.prefix = prefix;
     this.ttl = ttl;
+    this.tz = tz;
 
     this.client = new Redis(connection);
     this.subscriber = new Redis(connection);
@@ -127,7 +128,8 @@ export default class Bossbat {
         throw new Error(`Unknown interval of type "${typeOfEvery}" passed to hire.`);
       }
     } else if (definition.cron) {
-      const nextTime = parseExpression(definition.cron, { iterator: false }).next().getTime();
+      const options = { iterator: false, tz: this.tz };
+      const nextTime = parseExpression(definition.cron, options).next().getTime();
       const cronTimeout = nextTime - Date.now();
       // Force timeout to be at least 1:
       timeout = cronTimeout >= 1 ? cronTimeout : 1;

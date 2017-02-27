@@ -70,6 +70,7 @@ Creates a new bossbat instance. All arguments are optional.
 - `options.connection`: Used to configure the connection to your redis. This accepts the same arguments that [`ioredis`](https://github.com/luin/ioredis/blob/master/API.md#new_Redis_new) does.
 - `options.prefix`: A string that all redis keys will be prefixed with. Defaults to `bossbat`.
 - `options.ttl`: The number of milliseconds before a job times out. Setting it will change the maximum duration that jobs can hold a lock. By default, job locks will timeout if a job does not complete in 2000ms.
+- `options.tz`: An optional timezone used with `jobDefinition.cron` expressions.
 
 #### `bossbat.hire(jobName: String, jobDefinition: Object)`
 

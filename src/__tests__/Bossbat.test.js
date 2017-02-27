@@ -11,10 +11,11 @@ describe('Bossbat Units', () => {
   });
 
   it('constructs with arguments', () => {
-    const boss = new Bossbat({ connection: { db: 4 }, ttl: 101, prefix: 'p' });
+    const boss = new Bossbat({ connection: { db: 4 }, ttl: 101, prefix: 'p', tz: 'Europe/Helsinki' });
     expect(boss).toBeInstanceOf(Bossbat);
     expect(boss.ttl).toEqual(101);
     expect(boss.prefix).toEqual('p');
+    expect(boss.tz).toEqual('Europe/Helsinki');
     boss.quit();
   });
 
