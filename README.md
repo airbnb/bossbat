@@ -71,6 +71,9 @@ Creates a new bossbat instance. All arguments are optional.
 - `options.prefix`: A string that all redis keys will be prefixed with. Defaults to `bossbat`.
 - `options.ttl`: The number of milliseconds before a job times out. Setting it will change the maximum duration that jobs can hold a lock. By default, job locks will timeout if a job does not complete in 2000ms.
 - `options.tz`: An optional timezone used with `jobDefinition.cron` expressions.
+- `options.disableRedisConfig`: Disable usage of the redis `CONFIG` command,
+as it might be disabled in certain redis configurations. NOTE: If this option
+is used, the redis configuration should contain `notify-keyspace-events Ex`
 
 #### `bossbat.hire(jobName: String, jobDefinition: Object)`
 
