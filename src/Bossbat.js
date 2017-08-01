@@ -9,7 +9,7 @@ const JOB_TTL = 2000;
 const JOB_PREFIX = 'bossbat';
 
 export default class Bossbat {
-  constructor({ connection, prefix = JOB_PREFIX, ttl = JOB_TTL, tz } = {}) {
+  constructor({ connection, prefix = JOB_PREFIX, ttl = JOB_TTL, tz, disableRedisConfig } = {}) {
     const DB_NUMBER = (connection && connection.db) || 0;
 
     this.prefix = prefix;
@@ -23,7 +23,9 @@ export default class Bossbat {
     this.jobs = {};
     this.qas = [];
 
-    this.subscriber.config('SET', 'notify-keyspace-events', 'Ex');
+    if (!disableRedisConfig) {
+      this.subscriber.config('SET', 'notify-keyspace-events', 'Ex');
+    }
 
     // Subscribe to expiring keys on the jobs DB:
     this.subscriber.subscribe(`__keyevent@${DB_NUMBER}__:expired`);

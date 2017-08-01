@@ -2,20 +2,40 @@
 /* eslint-disable global-require */
 
 describe('Bossbat Units', () => {
-  const Bossbat = require('../Bossbat');
+  let Bossbat;
+  let Redis;
+
+  beforeAll(() => {
+    jest.mock('ioredis');
+    Bossbat = require('../Bossbat');
+    Redis = require('ioredis');
+  });
+
+  afterAll(() => {
+    jest.resetModules();
+    jest.unmock('ioredis');
+  });
+
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
 
   it('constructs with no arguments', () => {
     const boss = new Bossbat();
     expect(boss).toBeInstanceOf(Bossbat);
+    expect(Redis.mock.instances.length).toEqual(2);
+    expect(Redis.mock.instances[1].config.mock.calls.length).toEqual(1);
     boss.quit();
   });
 
   it('constructs with arguments', () => {
-    const boss = new Bossbat({ connection: { db: 4 }, ttl: 101, prefix: 'p', tz: 'Europe/Helsinki' });
+    const boss = new Bossbat({ connection: { db: 4 }, ttl: 101, prefix: 'p', tz: 'Europe/Helsinki', disableRedisConfig: true });
     expect(boss).toBeInstanceOf(Bossbat);
     expect(boss.ttl).toEqual(101);
     expect(boss.prefix).toEqual('p');
     expect(boss.tz).toEqual('Europe/Helsinki');
+    expect(Redis.mock.instances.length).toEqual(2);
+    expect(Redis.mock.instances[1].config.mock.calls.length).toEqual(0);
     boss.quit();
   });
 
