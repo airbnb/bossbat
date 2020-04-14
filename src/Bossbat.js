@@ -98,7 +98,7 @@ export default class Bossbat {
       // Call the QA functions, then finally the job function. We use a copy of
       // the job definition to prevent pollution between scheduled runs.
       const response = fn(name, { ...this.jobs[name] }, (_, definition) => (
-        definition.work()
+        definition.work(name)
       ));
 
       const end = () => { lock.unlock(); };
