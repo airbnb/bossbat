@@ -84,7 +84,8 @@ describe('Bossbat Integration', () => {
   it('runs scheduled work', (done) => {
     boss.hire('scheduled', {
       every: '200 ms',
-      work: () => {
+      work: (jobName) => {
+        expect(jobName).toEqual('scheduled');
         done();
       },
     });
