@@ -33,8 +33,8 @@
   },
   "dependencies": {
     "cron-parser": "^2.3.0",
-    "ioredis": "^2.4.3",
-    "redlock": "^2.1.0",
+    "ioredis": "^4.27.9",
+    "redlock": "^4.2.0",
     "throwback": "^1.1.1",
     "timestring": "^3.2.0"
   },
